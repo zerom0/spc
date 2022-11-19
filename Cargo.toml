@@ -1,0 +1,16 @@
+[package]
+name = "spc"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.66"
+clap = { version="4.0.26", features = ["cargo"] }
+env_logger = "0.9.3"
+log = "0.4.17"
+reqwest = { version="0.11.13", default_features = false, features = ["json", "rustls-tls", "socks"] }
+serde = { version = "1.0.147", features = ["derive"] }
+thiserror = "1.0.37"
+tokio = { version="1.22.0", features = ["full"] }
