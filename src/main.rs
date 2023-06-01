@@ -34,6 +34,9 @@ async fn main() -> Result<()> {
     let http_client = Client::builder()
         .timeout(http_timeout)
         .danger_accept_invalid_certs(false)
+        .user_agent(
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0) Gecko/20100101 Firefox/113.0",
+        )
         .build()
         .expect("Building http client");
 
@@ -70,17 +73,13 @@ async fn login(http_client: &Client) -> Result<String, Error> {
     let password = env::var("SPC_PASSWORD").expect("Missing environment variable SPC_PASSWORD");
     map.insert("email_address", email);
     map.insert("password", password);
-    map.insert("device_id", "f8e4ce0814".to_string());
-    let login_response = http_client
-        .post(url)
-        .json(&map)
-        .send()
-        .await?
-        .json::<LoginResponse>()
-        .await?;
+    map.insert("device_id", "2d9045f26a".to_string());
+    let login_response = http_client.post(url).json(&map).send().await?;
+    log::debug!("{:?}", login_response);
+    let login_response_json = login_response.json::<LoginResponse>().await?;
 
     log::info!("Logged in");
-    Ok(login_response.data.token)
+    Ok(login_response_json.data.token)
 }
 
 async fn logout(_http_client: &Client) -> Result<(), Error> {
